@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "node scripts/generate-ics.mjs",
+  "outputDirectory": "public",
+  "framework": null,
+  "headers": [
+    {
+      "source": "/shoots.ics",
+      "headers": [
+        { "key": "Content-Type", "value": "text/calendar; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=600" }
+      ]
+    }
+  ]
+}

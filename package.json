@@ -1,0 +1,10 @@
+{
+  "name": "shoot-schedule-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Onboarding-driven subscription calendar of home (or home+away) games for the sports teams you shoot",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-ics.mjs"
+  }
+}
