@@ -61,11 +61,12 @@ top level of `preferences.json`.
    per-sport defaults: hockey/basketball ~150, baseball ~180, soccer ~120,
    football ~210, volleyball ~120 — suggest one based on the league, let the
    user override).
-6. **Title prefix** — a short bracketed tag for this team's events in a
-   merged calendar (e.g. `[Canadians]`). Suggest one from the team name,
-   confirm or let them override.
 
-Derive a `slug` (lowercase, hyphenated, e.g. `vancouver-canadians`).
+Derive a `slug` (lowercase, hyphenated, e.g. `vancouver-canadians`). The
+event title itself doesn't need a per-team tag from the user — the
+generator automatically prefixes every event with `[{league}]` (from the
+`league` you captured in Step 3.1), so leagues are already distinguishable
+in a merged calendar without asking for one.
 
 ## Step 4: Resolve the schedule source
 
@@ -141,13 +142,21 @@ Write `teams/{slug}.json`:
   Look up venue lat/lon once per unique venue (needed for the tap-to-Maps
   location chip in iPhone Calendar — without it the chip may not be
   tappable).
-- `notes` — short phrase for theme nights, promos, retirement nights, etc.,
-  if the source mentions them. Leave empty/omit otherwise.
+- `notes` — **actively check** the source for theme nights, promos,
+  retirement/bobblehead nights, jersey reveals, etc. on each game, not just
+  ones that happen to stand out — many schedule sources mark these with an
+  icon, badge, or separate column that's easy to skip if you're only
+  reading date/opponent columns. Short phrase, e.g. `"Theme night: Fan
+  Appreciation"`. Leave empty/omit only when the source genuinely has
+  nothing for that game. This flows straight into the event description as
+  a `Notes:` line — it's the main way theme-night info reaches the user's
+  calendar, so don't skip checking for it.
 - **Playoffs**: if the source has them, add `gameType: "playoff"` and an
   optional `playoff` object: `{ "round": "...", "gameNumber": 1,
   "gamesInSeries": 7, "ifNecessary": false, "seriesContext": "Best-of-7" }`.
   All sub-fields optional. `opponent: "TBD"` is allowed for unset playoff
-  matchups.
+  matchups. `round` (e.g. `"NWL Championship Series"`, `"Round 1"`,
+  `"WHL Final"`) also becomes the event title's playoff tag — see below.
 
 Update `preferences.json` — add or update this team's entry (from Step 3)
 plus:
@@ -160,6 +169,12 @@ plus:
 you generate (e.g. a special-event name) with ` -` — some calendar/file
 tooling mishandles literal colons in filenames or fields derived from these
 strings.
+
+**Event title format** (handled automatically by `generate-ics.mjs`, nothing
+to write yourself here): `[{league}] {opponent} vs {team}` for a regular
+game, `[{league}] [{playoff round, or "Playoff" if unset}] {opponent} vs
+{team}` for a playoff game — e.g. `[MiLB] [NWL Championship Series] Eugene
+Emeralds vs Vancouver Canadians`.
 
 ## Step 7: Regenerate the calendar
 

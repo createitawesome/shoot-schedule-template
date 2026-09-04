@@ -143,9 +143,10 @@ function buildPlayoffPreamble(playoff) {
 }
 
 // team    = parsed teams/{slug}.json (venue + games[] — fetched schedule data only)
-// prefs   = this team's entry from preferences.json (titlePrefix,
-//           arrivalLeadMinutes, gameDurationMinutes, includeArrivalEvent,
-//           source.url)
+// prefs   = this team's entry from preferences.json (arrivalLeadMinutes,
+//           gameDurationMinutes, includeArrivalEvent, source.url). Event
+//           titles get a "[League]" tag from team.league (and a
+//           "[Round]"/"[Playoff]" tag for playoff games) — not from prefs.
 function buildEventsForTeam(team, prefs) {
   const events = [];
   const tz = team.timezone || "America/Vancouver";
@@ -178,11 +179,14 @@ function buildEventsForTeam(team, prefs) {
 
       const isPlayoff = game.gameType === "playoff";
       const playoffInfix = isPlayoff ? "-playoff" : "";
-      const titlePrefix = isPlayoff ? "[PLAYOFFS] " : "";
+      const leagueTag = team.league ? `[${team.league}] ` : "";
+      const playoffTag = isPlayoff
+        ? `[${(game.playoff && game.playoff.round) || "Playoff"}] `
+        : "";
       const playoffPreamble = isPlayoff ? buildPlayoffPreamble(game.playoff) : "";
       const matchup = game.title
-        ? `${titlePrefix}${game.title}`
-        : `${titlePrefix}${opponent} vs ${team.team}`;
+        ? `${leagueTag}${playoffTag}${game.title}`
+        : `${leagueTag}${playoffTag}${opponent} vs ${team.team}`;
 
       if (prefs.includeArrivalEvent) {
         events.push(
