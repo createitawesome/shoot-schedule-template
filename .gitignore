@@ -6,3 +6,12 @@ node_modules/
 .vercel
 public/
 .env*
+
+# Personal shoot-calendar config/data — private, never committed to this
+# public template. A .vercelignore override keeps these included in manual
+# `vercel --prod` uploads despite being gitignored.
+preferences.json
+teams/*.json
+
+# Internal planning docs — not part of the public template.
+docs/superpowers/
