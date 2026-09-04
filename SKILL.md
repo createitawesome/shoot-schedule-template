@@ -47,9 +47,9 @@ top level of `preferences.json`.
 
 `AskUserQuestion` (or sequential prompts) for a new team:
 
-1. **Team name** (e.g. "Vancouver Canadians") and **league** (e.g. "MiLB").
-   If ambiguous (multiple teams with that name), ask which one — city,
-   division, whatever disambiguates.
+1. **Team name** (e.g. "River City Rockets") and **league** (e.g. "Sample
+   League"). If ambiguous (multiple teams with that name), ask which one —
+   city, division, whatever disambiguates.
 2. **Home games only, or home + away?** Away games matter if the user
    travels to shoot some road games; default suggestion is home-only but
    don't assume — ask.
@@ -62,7 +62,7 @@ top level of `preferences.json`.
    football ~210, volleyball ~120 — suggest one based on the league, let the
    user override).
 
-Derive a `slug` (lowercase, hyphenated, e.g. `vancouver-canadians`). The
+Derive a `slug` (lowercase, hyphenated, e.g. `river-city-rockets`). The
 event title itself doesn't need a per-team tag from the user — the
 generator automatically prefixes every event with `[{league}]` (from the
 `league` you captured in Step 3.1), so leagues are already distinguishable
@@ -93,9 +93,9 @@ date, opponent, and venue for each, plainly:
 
 ```
 Found via [source]. Sample:
-1. 2026-05-27 — Eugene Emeralds vs Vancouver Canadians (Nat Bailey Stadium)
-2. 2026-05-28 — Eugene Emeralds vs Vancouver Canadians (Nat Bailey Stadium)
-3. 2026-05-29 — Eugene Emeralds vs Vancouver Canadians (Nat Bailey Stadium)
+1. 2026-05-27 — Metro Miners vs River City Rockets (Riverside Ballpark)
+2. 2026-05-28 — Metro Miners vs River City Rockets (Riverside Ballpark)
+3. 2026-05-29 — Metro Miners vs River City Rockets (Riverside Ballpark)
 
 Does this look right?
 ```
@@ -118,18 +118,18 @@ Write `teams/{slug}.json`:
 
 ```json
 {
-  "team": "Vancouver Canadians",
-  "slug": "vancouver-canadians",
-  "league": "MiLB",
+  "team": "River City Rockets",
+  "slug": "river-city-rockets",
+  "league": "Sample League",
   "timezone": "America/Vancouver",
   "homeVenue": {
-    "name": "Nat Bailey Stadium",
-    "address": "4601 Ontario St, Vancouver, BC V5V 3H4, Canada",
+    "name": "Riverside Ballpark",
+    "address": "123 Riverside Ave, Anytown, ST 00000",
     "lat": 49.2413,
     "lon": -123.1071
   },
   "games": [
-    { "date": "2026-05-27T19:05:00-07:00", "opponent": "Eugene Emeralds", "notes": "" }
+    { "date": "2026-05-27T19:05:00-07:00", "opponent": "Metro Miners", "notes": "" }
   ]
 }
 ```
@@ -155,8 +155,8 @@ Write `teams/{slug}.json`:
   optional `playoff` object: `{ "round": "...", "gameNumber": 1,
   "gamesInSeries": 7, "ifNecessary": false, "seriesContext": "Best-of-7" }`.
   All sub-fields optional. `opponent: "TBD"` is allowed for unset playoff
-  matchups. `round` (e.g. `"NWL Championship Series"`, `"Round 1"`,
-  `"WHL Final"`) also becomes the event title's playoff tag — see below.
+  matchups. `round` (e.g. `"Regional Championship Series"`, `"Round 1"`,
+  `"League Final"`) also becomes the event title's playoff tag — see below.
 
 Update `preferences.json` — add or update this team's entry (from Step 3)
 plus:
@@ -173,8 +173,8 @@ strings.
 **Event title format** (handled automatically by `generate-ics.mjs`, nothing
 to write yourself here): `[{league}] {opponent} vs {team}` for a regular
 game, `[{league}] [{playoff round, or "Playoff" if unset}] {opponent} vs
-{team}` for a playoff game — e.g. `[MiLB] [NWL Championship Series] Eugene
-Emeralds vs Vancouver Canadians`.
+{team}` for a playoff game — e.g. `[Sample League] [Regional Championship
+Series] Metro Miners vs River City Rockets`.
 
 ## Step 7: Regenerate the calendar
 
